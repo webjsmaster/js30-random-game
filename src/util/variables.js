@@ -72,3 +72,5 @@ export const cards = [
     img: img14,
   },
 ];
+
+export const localItem = 'webjsgame';

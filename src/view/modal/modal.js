@@ -61,8 +61,12 @@ export default class Modal extends View {
 
   showModal(type, content) {
     if (type === 'message') {
-      this.setStatus(true);
       this.content.setContent(content);
+    } else if (type === 'showResult') {
+      this.content.setResult(content);
+    } else if (type === 'newGame') {
+      this.content.setNewGame(content);
     }
+    this.setStatus(true);
   }
 }

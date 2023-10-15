@@ -2,12 +2,16 @@ import View from '../../../../util/view.js';
 import ElementCreator from '../../../../util/element-creator.js';
 import './items.scss';
 import questions from '../../../../public/questions1.png';
-import Count from '../../../header/container/count/count';
-import Modal from '../../../modal/modal';
-import Timer from '../../../../util/timer';
+import Count from '../../../header/container/count/count.js';
+import Modal from '../../../modal/modal.js';
+import Timer from '../../../../util/timer.js';
+import CurrentId from '../../../../util/currentId.js';
+import { saveLocalStorage } from '../../../../util/saveLocalStorage.js';
+import StatusGame from '../../../../util/statusGame.js';
+import StatusSound from '../../../../util/statusSound.js';
 
 // eslint-disable-next-line no-unused-vars
-let currentId = null;
+// let currentId = null;
 
 export default class Item extends View {
   constructor(card) {
@@ -30,7 +34,10 @@ export default class Item extends View {
 
     this.count = new Count();
     this.modal = new Modal();
+    this.current = new CurrentId();
+    this.statusGame = new StatusGame();
     this.timerInstance = new Timer();
+    this.sound = new StatusSound();
     this.configureView(card);
   }
 
@@ -55,9 +62,16 @@ export default class Item extends View {
 
   handlerClick(id) {
     this.timerInstance.start();
+    if (!this.statusGame.statusGame) {
+      this.statusGame.statusGame = true;
+    }
+
+    if (this.sound.statusSound) {
+      this.sound.playSound('click');
+    }
     const items = document.querySelectorAll('.main__item');
     const container = document.querySelector('.main__container');
-    if (currentId) {
+    if (this.current.currentId) {
       container.classList.add('event');
       items.forEach((item) => {
         if (item.id === id && item.classList.contains('active')) {
@@ -73,18 +87,22 @@ export default class Item extends View {
         }
       });
 
-
       this.elementCreator.getElement().classList.add('active');
       this.count.decrementCount(3);
-      currentId = null;
+      this.current.currentId = null;
     } else {
       this.elementCreator.getElement().classList.add('active');
-      currentId = id;
+      this.current.currentId = id;
     }
 
     if (this.checkWin(items)) {
+      if (this.sound.statusSound) {
+        this.sound.playSound('win');
+      }
       this.timerInstance.stop();
-      this.modal.showModal('message', `You won by score: ${this.count.getCount()} and in time: ${this.timerInstance.getTime()}`);
+      this.statusGame.statusGame = false;
+      saveLocalStorage({ time: this.timerInstance.getTime(), score: this.count.getCount() });
+      this.modal.showModal('message', `You won by score: ${this.count.getCount()} and in time: ${this.timerInstance.getTime()} ms`);
     }
   }
 
@@ -95,24 +113,6 @@ export default class Item extends View {
         showCards += 1;
       }
     });
-    console.log('[95] 🐬: ', showCards);
-    return showCards === 2;
+    return showCards === 28;
   }
-
-
-  // items.forEach((item) => {
-  //   if (item.id === id && item.classList.contains('active')) {
-  //     items.forEach((item1) => {
-  //       if (item1.id === id) item1.classList.add('ended');
-  //     });
-  //   } else if (item.classList.contains('active')) {
-  //     items.forEach((item2) => {
-  //       item2.disabled = true;
-  //     });
-  //     setTimeout(() => {
-  //       item.classList.remove('active');
-  //     }, 1000);
-  //   }
-  // });
-  //
 }

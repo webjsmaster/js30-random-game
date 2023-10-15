@@ -1,5 +1,6 @@
 import View from '../../../../util/view.js';
-import ElementCreator from '../../../../util/element-creator';
+import ElementCreator from '../../../../util/element-creator.js';
+import './count.scss';
 
 export default class Count extends View {
   constructor() {
@@ -35,6 +36,11 @@ export default class Count extends View {
 
   incrementCount(increment) {
     this.currentCount += increment;
+    this.rerender();
+  }
+
+  resetCount() {
+    this.currentCount = 0;
     this.rerender();
   }
 

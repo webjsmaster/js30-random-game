@@ -1,6 +1,7 @@
 import View from '../../../../util/view.js';
-import ElementCreator from '../../../../util/element-creator';
+import ElementCreator from '../../../../util/element-creator.js';
 import Modal from '../../../modal/modal.js';
+import './time.scss';
 
 export default class Time extends View {
   constructor() {
@@ -9,7 +10,7 @@ export default class Time extends View {
      */
     const params = {
       tag: 'div',
-      classNames: ['header__live'],
+      classNames: ['header__timer'],
     };
     super(params);
     // ======== > singleton < ======== //
@@ -26,15 +27,8 @@ export default class Time extends View {
   configureView() {
     const timerWrapper = this.elementCreator.getElement();
     timerWrapper.textContent = 'Time: ';
-    this.timer = new ElementCreator({ tag: 'span', classNames: [], textContent: '0' });
-    this.button = new ElementCreator({
-      tag: 'button', classNames: [], textContent: 'Click', callback: [{ event: 'click', callback: () => this.handleButton() }],
-    });
-    timerWrapper.append(this.timer.getElement(), this.button.getElement());
-  }
-
-  handleButton() {
-    this.modal.setStatus(!this.modal.getStatus());
+    this.timer = new ElementCreator({ tag: 'span', classNames: [], textContent: '00:00.0' });
+    timerWrapper.append(this.timer.getElement());
   }
 
   setTextTime(time) {

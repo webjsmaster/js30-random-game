@@ -1,6 +1,8 @@
 import View from '../../../util/view.js';
 import Count from './count/count.js';
 import Time from './time/time.js';
+import Button from './button/button.js';
+import Sound from './sound/sound.js';
 
 export default class Container extends View {
   constructor() {
@@ -17,6 +19,6 @@ export default class Container extends View {
 
   configureView() {
     const profile = this.elementCreator.getElement();
-    profile.append(new Count().getHtmlElement(), new Time().getHtmlElement());
+    profile.append(new Count().getHtmlElement(), new Button().getHtmlElement(), new Time().getHtmlElement(), new Sound().getHtmlElement());
   }
 }
